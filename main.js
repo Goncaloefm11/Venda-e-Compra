@@ -1,6 +1,3 @@
-// Importa o arquivo de estilos CSS para o jogo
-import './style.css'
-
 // Importa a biblioteca Phaser
 import Phaser from 'phaser';
 
@@ -8,10 +5,14 @@ import Phaser from 'phaser';
 const sizes = {
     width: 1580, // Largura do jogo
     height: 680, // Altura do jogo
-}
+} 
 
 // definir fundo
-document.body.style.backgroundColor = "black";
+document.body.style.backgroundColor = "white";
+
+//
+//let width;
+//let height;
 
 // Define uma classe para a cena do jogo
 class GameScene extends Phaser.Scene {
@@ -52,10 +53,16 @@ class GameScene extends Phaser.Scene {
         this.imagemDinheiro;
         this.pera_10a20centimos;
         this.tshirt_5a18euros;
-        /*this.imageList = [ "banana_de10a20centimos.png", 
-        "chapeu_8a20euros.png", "chavena_2a4euros.png",
-        "gelado_40a120centimos.png", "pera_10a20centimos.png", 
-        "tshirt_5a18euros.png"];*/
+
+        this.imageList = [ "banana_de10a20centimos", 
+        "chapeu_8a20euros", "chavena_2a4euros",
+        "gelado_40a120centimos", "pera_10a20centimos", 
+        "tshirt_5a18euros"];
+
+        this.moneyList = [ "centimo1", "centimos2","centimos5",
+            "centimos10","centimos20","centimos50",
+            "euro1","euros2", "euros5_completos","euros10_completos",
+            "euros20_completos"];
     }
 
     preload() {
@@ -88,37 +95,33 @@ class GameScene extends Phaser.Scene {
         this.load.image("centimos50", "./assets/centimos50.png");
         this.load.image("etiqueta", "./assets/etiqueta.png");
         this.load.image("imagemDinheiro", "./assets/imagemDinheiro.png");
-        //this.loadRandomImage();
+
+        this.load.image("banana_de10a20centimos", "./assets/banana-de10a20centimos.png");
+        this.load.image("chapeu_8a20euros", "./assets/chapeu-8a20euros.png");
+        this.load.image("chavena_2a4euros", "./assets/chavena-2a4euros.png");
+        this.load.image("gelado_40a120centimos", "./assets/gelado-40a120centimos.png");
+        this.load.image("pera_10a20centimos", "./assets/pera-10a20centimos.png");
+        this.load.image("tshirt_5a18euros", "./assets/tshirt-5a18euros.png");
+
     }
-
-    /*loadRandomImage() {
-        //const porque só pode ser chamado o random dentro desta função
-        const randomIndex = Phaser.Math.Between(0, this.imageList.length - 1);
-        const randomImageName = this.imageList[randomIndex];
-    
-        // Carrega a imagem aleatória
-        this.load.image(randomImageName, "./assets/" + randomImageName);
-    
-        // Define a função a ser chamada quando a imagem for carregada completamente
-        this.load.once('complete', () => {
-            // Adiciona a imagem carregada ao jogo
-            this.randomImage = this.add.image(450, 250, randomImageName).setOrigin(0, 0);
-            this.randomImage.setDisplaySize(150, 150);
-        });
-
-        // Inicia o carregamento das imagens
-        this.load.start();
-    }*/
     
 
     create() {
         // Define uma variável para controlar se o menu inicial está ativo
         this.menuInicial = true;
 
+        //width = game.config.width;
+        //height = game.config.height;
         // Layout 1: Configura o fundo e os personagens para o menu inicial
         this.background = this.add.image(0,0,"backgroundSQ").setOrigin(0,0); // Fundo
         this.background.setDisplaySize(sizes.width, sizes.height); // Define o tamanho do fundo
+        //this.backgroundSQ = this.add.sprite(0.5*width,0.5*height,'backgroundSQ');
+        //this.backgroundSQ.setScale(1.5);
 
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    
         // Personagem "meninocarrinho" e sua interação
         this.meninocarrinho = this.add.image(430, 285, "meninocarrinho").setOrigin(0,0); // Personagem
         this.meninocarrinho.setDisplaySize(sizes.width-1295, sizes.height-400); // Define o tamanho do personagem
@@ -129,6 +132,8 @@ class GameScene extends Phaser.Scene {
         this.meninocarrinho.on("pointerup", (pointer) => {
             // Atualiza o estado do menu inicial
             this.menuInicial = false;
+            this.homemcaixa.destroy();
+            this.meninocarrinho.setVisible(false);
 
             // Configura o layout para a tela de compra
             this.backgroundSQ2 = this.add.image(0,0, "backgroundSQ2").setOrigin(0,0);
@@ -139,14 +144,51 @@ class GameScene extends Phaser.Scene {
             this.titulo.setDisplaySize(sizes.width - 1000, sizes.height - 630);
             this.caixaregistadora = this.add.image(950,120, "caixaregistadora").setOrigin(0,0);//(+ vai para a direita, + vai para baixo)
             this.caixaregistadora.setDisplaySize(600,535);//(+ estica, + comprime)
-            this.okbutton = this.add.image(1070,295, "okbutton").setOrigin(0,0);
-            this.okbutton.setDisplaySize(130,70);//(+ estica, + comprime)
+
+            // botao ok iterativo
+            var originalX = 1070;
+            var originalY = 295;
+
+            this.okbutton = this.add.image(originalX, originalY, "okbutton").setOrigin(0, 0);
+            this.okbutton.setDisplaySize(130, 70); // (+ estica, + comprime)
+            this.okbutton.setScale(1.1, 0.9);
+
+            // Define as interações do mouse
+            this.okbutton.setInteractive();
+                        
+            // Evento quando o botão é pressionado
+            this.okbutton.on('pointerdown', function () {
+                this.setScale(1, 0.8); // Diminui o tamanho horizontal do botão ao ser pressionado
+            });
+
+            // Evento quando o botão é solto
+            this.okbutton.on('pointerup', function () {
+                this.setScale(1.1, 0.9); // Retorna o tamanho do botão ao normal ao soltar
+            });
+
             this.seta = this.add.image(200,580, "seta").setOrigin(0,0);
             this.seta.setDisplaySize(90, 60);//(+ estica, + comprime)
             this.wallet = this.add.image(50,550, "wallet").setOrigin(0,0);
             this.wallet.setDisplaySize(120,100);//(+ estica, + comprime)
-            this.setaparatras = this.add.image(1070,240, "setaparatras").setOrigin(0,0);
-            this.setaparatras.setDisplaySize(130,50);//(+ estica, + comprime)
+
+            //
+            var originalXseta = 1070;
+            var originalYseta = 240;
+            this.setaparatras = this.add.image(originalXseta,originalYseta, "setaparatras").setOrigin(0,0);
+            this.setaparatras.setDisplaySize(130, 50);//(+ estica, + comprime)
+            this.setaparatras.setScale(1.1,0.9);
+
+            this.setaparatras.setInteractive();
+
+            this.setaparatras.on('pointerdown', function(){
+                this.setScale(1, 0.8); // Diminui o tamanho horizontal do botão ao ser pressionado
+            });
+
+            // Evento quando o botão é solto
+            this.setaparatras.on('pointerup', function () {
+                this.setScale(1.1, 0.9); // Retorna o tamanho do botão ao normal ao soltar
+            });
+
             this.textocarrinho = this.add.text(150,500, "Paga com o mínimo possível.", {fontFamily: 'Arial', fontSize: '30px'}).setOrigin(0,0);
 
             // Configura o botão "bthome" na tela de compra
@@ -182,8 +224,169 @@ class GameScene extends Phaser.Scene {
                 this.scene.start("scene-game"); // Inicia a cena do jogo
                 this.menuInicial = true; // Atualiza o estado do menu inicial
             });
+
+            // imagem do produto:
+            //const porque só pode ser chamado o random dentro desta função
+            const randomIndex = Phaser.Math.Between(0, this.imageList.length - 1);
+            const randomImageName = this.imageList[randomIndex];
+            
+            var etiquetaCoords = {
+                //x para esquerda/direita
+                //y para cima/baixo
+                "banana_de10a20centimos": { x: 560, y: 350},
+                "chapeu_8a20euros": { x: 450, y: 350 },
+                "chavena_2a4euros": { x: 410, y: 300 },
+                "gelado_40a120centimos": { x: 450, y: 300 },
+                "pera_10a20centimos": { x: 470, y: 350 },
+                "tshirt_5a18euros": { x: 450, y: 250 }
+            };                
+            
+              
+            // Adiciona a imagem carregada ao jogo
+            this.etiqueta = this.add.image(400, 210, "etiqueta").setOrigin(0,0);
+            this.etiqueta.setDisplaySize(280,150);
+            this.etiqueta.angle += 180;
+            this.randomImage = this.add.image(400, 210, randomImageName).setOrigin(0, 0);
+            this.randomImage.setDisplaySize(200, 200);
+            
+            // Verifica se o nome da imagem está na lista de coordenadas e define as coordenadas correspondentes
+            if (randomImageName in etiquetaCoords) {
+                var coords = etiquetaCoords[randomImageName];
+                this.etiqueta.setPosition(coords.x, coords.y);
+                //Calcula as coordenadas para o texto com base no centro da etiqueta
+                var textoX = coords.x;
+                var textoY = coords.y;
+                //valor base do valor aleatorio
+                var valorAleatorio = 0;
+            
+                if (randomImageName === "banana_de10a20centimos") {
+                    valorAleatorio = Phaser.Math.RND.realInRange(0.10, 0.20).toFixed(2);
+                } else if (randomImageName === "chapeu_8a20euros") {
+                    valorAleatorio = Phaser.Math.RND.realInRange(8.00, 20.00).toFixed(2);
+                } else if (randomImageName === "chavena_2a4euros") {
+                    valorAleatorio = Phaser.Math.RND.realInRange(2.00, 4.00).toFixed(2);
+                } else if (randomImageName === "gelado_40a120centimos") {
+                    valorAleatorio = Phaser.Math.RND.realInRange(0.40, 1.20).toFixed(2);
+                } else if (randomImageName === "pera_10a20centimos") {
+                    valorAleatorio = Phaser.Math.RND.realInRange(0.10, 0.20).toFixed(2);
+                } else if (randomImageName === "tshirt_5a18euros") {
+                    valorAleatorio = Phaser.Math.RND.realInRange(5.00, 18.00).toFixed(2);
+                }
+            
+                // Adiciona o texto com o valor aleatório dentro da etiqueta
+                this.valor = this.add.text(textoX, textoY, "Valor: " + valorAleatorio + "€", {
+                    fontFamily: 'Arial',
+                    fontSize: '30px'
+                }).setOrigin(1.6, 1.2);
+                this.valor.angle += 19; 
+
+                var valor = valorAleatorio * (1.5); // Multiplicando por 1.5 para tornar o valor maior
+                var total = 0;
+                var maxTentativas = 10; // Definindo um número máximo de tentativas
+                var imagensValoresDinheiro = {
+                    "centimo1": { valor: 0.01 },
+                    "centimos2": { valor: 0.02 },
+                    "centimos5": { valor: 0.05 },
+                    "centimos10": { valor: 0.10 },
+                    "centimos20": { valor: 0.20 },
+                    "centimos50": { valor: 0.50 },
+                    "euro1": { valor: 1.00 },
+                    "euros2": { valor: 2.00 },
+                    "euros5_completos": { valor: 5.00 },
+                    "euros10_completos": { valor: 10.00 },
+                    "euros20_completos": { valor: 20.00 }
+                };  
+                // Obtendo as chaves da matriz imagensValoresDinheiro    
+                var chaves = Object.keys(imagensValoresDinheiro);
+
+                // Loop enquanto o total ainda for menor que o valor necessário ou até alcançar o número máximo de tentativas
+                var tentativas = 0;
+                var q = 0, w = 0, e = 0, r = 0, t = 0, y = 0, u = 0, i = 0, o = 0, p = 0, l = 0;
+                while (total < valor && tentativas < maxTentativas) {
+                    // Escolhe aleatoriamente uma chave do objeto imagensValoresDinheiro
+                    var randomDinheiro = Phaser.Math.RND.pick(chaves);
+                    var valorDinheiro = imagensValoresDinheiro[randomDinheiro].valor;
+
+                    console.log("randomDinheiro", randomDinheiro);
+                    console.log("Valor de imagemDinheiro:", valorDinheiro);
+                    //Verifica se adicionar essa imagem não ultrapassa o valor necessário
+                    if (total + (valorDinheiro * 0.25) <= valor) {
+                        total += valorDinheiro * 0.25;
+                        // Adiciona a imagem na cena Phaser com base na imagem escolhida
+                        switch (randomDinheiro) {
+                            
+                            case "centimo1":
+                                this.imagem0 = this.add.image(650 + q , 580 - q , randomDinheiro).setOrigin(0, 0);
+                                this.imagem0.setDisplaySize(50, 50); // Ajuste o tamanho conforme necessário
+                                q += 2;
+                                break;
+                            case "centimos2":
+                                this.imagem1 = this.add.image(560 + w, 600 - w , randomDinheiro).setOrigin(0, 0);
+                                this.imagem1.setDisplaySize(50, 50); // Ajuste o tamanho conforme necessário                       
+                                w += 2;
+                                break;
+                            case "centimos5":
+                                this.imagem2 = this.add.image(490 +e, 600-e , randomDinheiro).setOrigin(0, 0);
+                                this.imagem2.setDisplaySize(50, 50); // Ajuste o tamanho conforme necessário                       
+                                e += 2;
+                                break;
+                            case "centimos10":
+                                this.imagem3 = this.add.image(410 +r, 620-r , randomDinheiro).setOrigin(0, 0);
+                                this.imagem3.setDisplaySize(50, 50); // Ajuste o tamanho conforme necessário          
+                                r += 2;
+                                break;
+                            case "centimos20":
+                                this.imagem4 = this.add.image(510 +t, 550-t, randomDinheiro).setOrigin(0, 0);
+                                this.imagem4.setDisplaySize(50, 50); // Ajuste o tamanho conforme necessário                                                         
+                                t+= 2;
+                                break;
+                            case "centimos50":
+                                this.imagem5 = this.add.image(365+y, 550-y, randomDinheiro).setOrigin(0, 0);
+                                this.imagem5.setDisplaySize(50, 50); // Ajuste o tamanho conforme necessário                               
+                                y+=2;
+                                break;
+                            case "euro1":
+                                this.imagem6 = this.add.image(370+u, 580-u, randomDinheiro).setOrigin(0, 0);
+                                this.imagem6.setDisplaySize(50, 50); // Ajuste o tamanho conforme necessário
+                                u+=2;
+                                break;
+                            case "euros2":
+                                this.imagem7 = this.add.image(450+i, 540-i, randomDinheiro).setOrigin(0, 0);
+                                this.imagem7.setDisplaySize(50, 50); // Ajuste o tamanho conforme necessário
+                                i+=2;
+                                break;
+                            case "euros5_completos":
+                                this.imagem8 = this.add.image(300+o, 575-o, randomDinheiro).setOrigin(0, 0);
+                                this.imagem8.setDisplaySize(50, 70); // Ajuste o tamanho conforme necessário
+                                o+=2;
+                                break;
+                            case "euros10_completos":
+                                this.imagem9 = this.add.image(310+p, 580-p, randomDinheiro).setOrigin(0, 0);
+                                this.imagem9.setDisplaySize(50, 70); // Ajuste o tamanho conforme necessário
+                                p+=2;
+                                break;
+                            case "euros20_completos":
+                                this.imagem10 = this.add.image(320+l, 580-l, randomDinheiro).setOrigin(0, 0);
+                                this.imagem10.setDisplaySize(50, 70); // Ajuste o tamanho conforme necessário
+                                l+=2;
+                                break;
+                        }
+                    }
+                    tentativas++;
+                }
+            }
         });
+            
         
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
         // Personagem "homemcaixa" e sua interação
         this.homemcaixa = this.add.image(800,240,"homemcaixa").setOrigin(0,0);
@@ -195,6 +398,8 @@ class GameScene extends Phaser.Scene {
         this.homemcaixa.on("pointerup", (pointer) => {
             // Atualiza o estado do menu inicial
             this.menuInicial = false;
+            this.meninocarrinho.destroy();
+            this.homemcaixa.destroy();
 
             // Configura o layout para a tela de venda
             this.backgroundSQ2 = this.add.image(0,0, "backgroundSQ2").setOrigin(0,0);
@@ -206,15 +411,53 @@ class GameScene extends Phaser.Scene {
             this.caixaregistadora = this.add.image(950,120, "caixaregistadora").setOrigin(0,0);
             /////////////////////////////////(+ vai para a direita, + vai para baixo)
             this.caixaregistadora.setDisplaySize(600,535);
-            this.okbutton = this.add.image(1070,295, "okbutton").setOrigin(0,0);
-            this.okbutton.setDisplaySize(130,70);
+
+            ///
+            // botao ok iterativo
+            var originalX = 1070;
+            var originalY = 295;
+            
+            this.okbutton = this.add.image(originalX, originalY, "okbutton").setOrigin(0, 0);
+            this.okbutton.setDisplaySize(130, 70); // (+ estica, + comprime)
+            this.okbutton.setScale(1.1, 0.9);
+
+            // Define as interações do mouse
+            this.okbutton.setInteractive();
+                        
+            // Evento quando o botão é pressionado
+            this.okbutton.on('pointerdown', function () {
+                this.setScale(1, 0.8); // Diminui o tamanho horizontal do botão ao ser pressionado
+            });
+
+            // Evento quando o botão é solto
+            this.okbutton.on('pointerup', function () {
+                this.setScale(1.1, 0.9); // Retorna o tamanho do botão ao normal ao soltar
+            });
+            
             ////////////////////(+ estica, + comprime)
             this.seta = this.add.image(200,580, "seta").setOrigin(0,0);
             this.seta.setDisplaySize(90, 60);
+            
             this.wallet = this.add.image(50,550, "wallet").setOrigin(0,0);
             this.wallet.setDisplaySize(120,100);
-            this.setaparatras = this.add.image(1070,240, "setaparatras").setOrigin(0,0);
-            this.setaparatras.setDisplaySize(130,50);
+            ////
+            var originalXseta = 1070;
+            var originalYseta = 240;
+            this.setaparatras = this.add.image(originalXseta,originalYseta, "setaparatras").setOrigin(0,0);
+            this.setaparatras.setDisplaySize(130, 50);//(+ estica, + comprime)
+            this.setaparatras.setScale(1.1,0.9);
+
+            this.setaparatras.setInteractive();
+
+            this.setaparatras.on('pointerdown', function(){
+                this.setScale(1, 0.8); // Diminui o tamanho horizontal do botão ao ser pressionado
+            });
+
+            // Evento quando o botão é solto
+            this.setaparatras.on('pointerup', function () {
+                this.setScale(1.1, 0.9); // Retorna o tamanho do botão ao normal ao soltar
+            });
+            ///
             this.textocaixa = this.add.text(1170,445, "Dá o troco.", {fontFamily: 'Arial', fontSize: '30px'}).setOrigin(0,0);
             
             
@@ -251,7 +494,65 @@ class GameScene extends Phaser.Scene {
                 this.scene.start("scene-game"); // Inicia a cena do jogo
                 this.menuInicial = true; // Atualiza o estado do menu inicial
             });
+
+            // imagem do produto:
+            //const porque só pode ser chamado o random dentro desta função
+            const randomIndex = Phaser.Math.Between(0, this.imageList.length - 1);
+            const randomImageName = this.imageList[randomIndex];
+            var etiquetaCoords = {
+                //x para esquerda/direita
+                //y para cima/baixo
+                "banana_de10a20centimos": { x: 560, y: 350 },
+                "chapeu_8a20euros": { x: 450, y: 350 },
+                "chavena_2a4euros": { x: 410, y: 300 },
+                "gelado_40a120centimos": { x: 450, y: 300 },
+                "pera_10a20centimos": { x: 470, y: 350 },
+                "tshirt_5a18euros": { x: 450, y: 250 }
+            };
+            // Adiciona a imagem carregada ao jogo
+            this.etiqueta = this.add.image(400, 210, "etiqueta").setOrigin(0,0);
+            this.etiqueta.setDisplaySize(280,150);
+            this.etiqueta.angle += 180;
+            this.randomImage = this.add.image(400, 210, randomImageName).setOrigin(0, 0);
+            this.randomImage.setDisplaySize(200, 200);
+            
+            // Verifica se o nome da imagem está na lista de coordenadas e define as coordenadas correspondentes
+            if (randomImageName in etiquetaCoords) {
+                var coords = etiquetaCoords[randomImageName];
+                this.etiqueta.setPosition(coords.x, coords.y);
+                //Calcula as coordenadas para o texto com base no centro da etiqueta
+                var textoX = coords.x;
+                var textoY = coords.y;
+                //valor base do valor aleatorio
+                var valorAleatorio = 0;
+            
+                if (randomImageName === "banana_de10a20centimos") {
+                    valorAleatorio = Phaser.Math.RND.realInRange(0.10, 0.20).toFixed(2);
+                } else if (randomImageName === "chapeu_8a20euros") {
+                    valorAleatorio = Phaser.Math.RND.realInRange(8.00, 20.00).toFixed(2);
+                } else if (randomImageName === "chavena_2a4euros") {
+                    valorAleatorio = Phaser.Math.RND.realInRange(2.00, 4.00).toFixed(2);
+                } else if (randomImageName === "gelado_40a120centimos") {
+                    valorAleatorio = Phaser.Math.RND.realInRange(0.40, 1.20).toFixed(2);
+                } else if (randomImageName === "pera_10a20centimos") {
+                    valorAleatorio = Phaser.Math.RND.realInRange(0.10, 0.20).toFixed(2);
+                } else if (randomImageName === "tshirt_5a18euros") {
+                    valorAleatorio = Phaser.Math.RND.realInRange(5.00, 18.00).toFixed(2);
+                }
+            
+                // Adiciona o texto com o valor aleatório dentro da etiqueta
+                this.valor = this.add.text(textoX, textoY, "Valor: " + valorAleatorio + "€", {
+                    fontFamily: 'Arial',
+                    fontSize: '30px'
+                }).setOrigin(1.6, 1.2);
+                this.valor.angle += 19; 
+                
+            }
         });
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
         // Configura os eventos de interação para os botões "homemcaixa" e "meninocarrinho"
         // para aumentar de tamanho quando o cursor estiver sobre eles
@@ -352,7 +653,6 @@ class GameScene extends Phaser.Scene {
         this.titulo = this.add.image(500,100, "titulo").setOrigin(0,0);
         this.titulo.setDisplaySize(sizes.width - 1000, sizes.height - 630);
 
-
     }
 
     update() {} // Função de atualização do jogo, chamada automaticamente pelo Phaser em cada frame
@@ -364,8 +664,17 @@ const config = {
     type: Phaser.AUTO, // Tipo de renderização WebGL
     width: sizes.width, // Largura do jogo
     height: sizes.height, // Altura do jogo
-    scene: [GameScene] // Array de cenas do jogo, neste caso, apenas uma cena (GameScene)
+    scene: [GameScene], // Array de cenas do jogo, neste caso, apenas uma cena (GameScene)
+    scale: {
+        mode: Phaser.Scale.FIT, // Ajusta o jogo para caber na janela do navegador
+        autoCenter: Phaser.Scale.CENTER_BOTH // Centraliza o jogo na janela do navegador
+    },
+    backgroundColor: "#ffffff",
+    parent: 'divId',
+    fullscreenTarget: 'divId',
+    scene: [GameScene],
 }
 
 // Criação do objeto de jogo com base na configuração definida
 const game = new Phaser.Game(config);
+}
