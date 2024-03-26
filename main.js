@@ -248,6 +248,44 @@ class GameScene extends Phaser.Scene {
             this.etiqueta.angle += 180;
             this.randomImage = this.add.image(400, 210, randomImageName).setOrigin(0, 0);
             this.randomImage.setDisplaySize(200, 200);
+
+            function combinacaoSomaMinima(valor, moedasDisponiveis) {
+                // Ordena as moedas em ordem decrescente
+                moedasDisponiveis.sort((a, b) => b - a);
+                
+                var soma = 0;
+                var combinacao = [];
+                
+                for (var i = 0; i < moedasDisponiveis.length; i++) {
+                    while (soma + moedasDisponiveis[i] <= valor) {
+                        combinacao.push(moedasDisponiveis[i]);
+                        soma += moedasDisponiveis[i];
+                        // Remove a moeda usada do array
+                        moedasDisponiveis.splice(i, 1);     
+                    }
+                    console.log(combinacao);
+                }
+                
+                // Se a soma for menor que o valor, adicione a menor moeda disponível
+                while (soma < valor && moedasDisponiveis.length > 0) {
+                    var somaMaior = 0;
+                    
+                    var somaMenor = moedasDisponiveis[moedasDisponiveis.length - 1];
+                    if (menorMoeda > combinacao[combinacao.length - 1]) {
+                        // Se a última moeda adicionada for maior que todas as anteriores, remova todas e adicione só a última moeda
+                        combinacao = [];
+                    }
+                    combinacao.push(menorMoeda);
+                    soma += menorMoeda;
+                    // Remova a moeda usada do array
+                    moedasDisponiveis.pop();
+                }
+                
+                return combinacao;
+            }
+            
+            
+
             
             // Verifica se o nome da imagem está na lista de coordenadas e define as coordenadas correspondentes
             if (randomImageName in etiquetaCoords) {
@@ -282,7 +320,7 @@ class GameScene extends Phaser.Scene {
 
                 var valor = valorAleatorio * (1.5); // Multiplicando por 1.5 para tornar o valor maior
                 var total = 0;
-                var maxTentativas = 10; // Definindo um número máximo de tentativas
+                
                 var imagensValoresDinheiro = {
                     "centimo1": { valor: 0.01 },
                     "centimos2": { valor: 0.02 },
@@ -298,10 +336,11 @@ class GameScene extends Phaser.Scene {
                 };  
                 // Obtendo as chaves da matriz imagensValoresDinheiro    
                 var chaves = Object.keys(imagensValoresDinheiro);
-
-                // Loop enquanto o total ainda for menor que o valor necessário ou até alcançar o número máximo de tentativas
+                var escolhidas = [];
+                var maxTentativas = 20; // Definindo um número máximo de tentativas
                 var tentativas = 0;
                 var q = 0, w = 0, e = 0, r = 0, t = 0, y = 0, u = 0, i = 0, o = 0, p = 0, l = 0;
+                // Loop enquanto o total ainda for menor que o valor necessário ou até alcançar o número máximo de tentativas
                 while (total < valor && tentativas < maxTentativas) {
                     // Escolhe aleatoriamente uma chave do objeto imagensValoresDinheiro
                     var randomDinheiro = Phaser.Math.RND.pick(chaves);
@@ -310,72 +349,94 @@ class GameScene extends Phaser.Scene {
                     console.log("randomDinheiro", randomDinheiro);
                     console.log("Valor de imagemDinheiro:", valorDinheiro);
                     //Verifica se adicionar essa imagem não ultrapassa o valor necessário
-                    if (total + (valorDinheiro * 0.25) <= valor) {
-                        total += valorDinheiro * 0.25;
+                    if (total + (valorDinheiro) <= valor) {
+                        if(valorDinheiro > 2){
+                            total += valorDinheiro * 0.90;
+                        }
+                        else {
+                            total += valorDinheiro;
+                        }
                         // Adiciona a imagem na cena Phaser com base na imagem escolhida
                         switch (randomDinheiro) {
                             
                             case "centimo1":
                                 this.imagem0 = this.add.image(650 + q , 580 - q , randomDinheiro).setOrigin(0, 0);
                                 this.imagem0.setDisplaySize(50, 50); // Ajuste o tamanho conforme necessário
-                                q += 2;
+                                escolhidas.push(valorDinheiro);
+                                q += 3;
                                 break;
                             case "centimos2":
                                 this.imagem1 = this.add.image(560 + w, 600 - w , randomDinheiro).setOrigin(0, 0);
                                 this.imagem1.setDisplaySize(50, 50); // Ajuste o tamanho conforme necessário                       
-                                w += 2;
+                                escolhidas.push(valorDinheiro);
+                                w += 3;
                                 break;
                             case "centimos5":
                                 this.imagem2 = this.add.image(490 +e, 600-e , randomDinheiro).setOrigin(0, 0);
                                 this.imagem2.setDisplaySize(50, 50); // Ajuste o tamanho conforme necessário                       
-                                e += 2;
+                                escolhidas.push(valorDinheiro);
+                                e += 3;
                                 break;
                             case "centimos10":
                                 this.imagem3 = this.add.image(410 +r, 620-r , randomDinheiro).setOrigin(0, 0);
                                 this.imagem3.setDisplaySize(50, 50); // Ajuste o tamanho conforme necessário          
-                                r += 2;
+                                escolhidas.push(valorDinheiro);
+                                r += 3;
                                 break;
                             case "centimos20":
                                 this.imagem4 = this.add.image(510 +t, 550-t, randomDinheiro).setOrigin(0, 0);
                                 this.imagem4.setDisplaySize(50, 50); // Ajuste o tamanho conforme necessário                                                         
-                                t+= 2;
+                                escolhidas.push(valorDinheiro);
+                                t+= 3;
                                 break;
                             case "centimos50":
                                 this.imagem5 = this.add.image(365+y, 550-y, randomDinheiro).setOrigin(0, 0);
                                 this.imagem5.setDisplaySize(50, 50); // Ajuste o tamanho conforme necessário                               
-                                y+=2;
+                                escolhidas.push(valorDinheiro);
+                                y+=3;
                                 break;
                             case "euro1":
                                 this.imagem6 = this.add.image(370+u, 580-u, randomDinheiro).setOrigin(0, 0);
                                 this.imagem6.setDisplaySize(50, 50); // Ajuste o tamanho conforme necessário
-                                u+=2;
+                                escolhidas.push(valorDinheiro);
+                                u+=3;
                                 break;
                             case "euros2":
-                                this.imagem7 = this.add.image(450+i, 540-i, randomDinheiro).setOrigin(0, 0);
+                                this.imagem7 = this.add.image(440+i, 560-i, randomDinheiro).setOrigin(0, 0);
                                 this.imagem7.setDisplaySize(50, 50); // Ajuste o tamanho conforme necessário
-                                i+=2;
+                                escolhidas.push(valorDinheiro);
+                                i+=3;
                                 break;
                             case "euros5_completos":
                                 this.imagem8 = this.add.image(300+o, 575-o, randomDinheiro).setOrigin(0, 0);
                                 this.imagem8.setDisplaySize(50, 70); // Ajuste o tamanho conforme necessário
-                                o+=2;
+                                escolhidas.push(valorDinheiro);
+                                o+=3;
                                 break;
                             case "euros10_completos":
                                 this.imagem9 = this.add.image(310+p, 580-p, randomDinheiro).setOrigin(0, 0);
                                 this.imagem9.setDisplaySize(50, 70); // Ajuste o tamanho conforme necessário
-                                p+=2;
+                                escolhidas.push(valorDinheiro);
+                                p+=3;
                                 break;
                             case "euros20_completos":
                                 this.imagem10 = this.add.image(320+l, 580-l, randomDinheiro).setOrigin(0, 0);
                                 this.imagem10.setDisplaySize(50, 70); // Ajuste o tamanho conforme necessário
-                                l+=2;
+                                l+=3;
+                                escolhidas.push(valorDinheiro);
                                 break;
                         }
                     }
                     tentativas++;
+                    console.log(escolhidas);
                 }
+                //calcularTrocoMinimo(valorAleatorio);
+                combinacaoSomaMinima(valorAleatorio, escolhidas);
             }
+            
         });
+
+        
             
         
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -677,4 +738,3 @@ const config = {
 
 // Criação do objeto de jogo com base na configuração definida
 const game = new Phaser.Game(config);
-}
