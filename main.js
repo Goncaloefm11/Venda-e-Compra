@@ -141,10 +141,10 @@ class GameScene extends Phaser.Scene {
             this.caixaregistadora.setDisplaySize(600,535);//(+ estica, + comprime)
 
             // botao ok iterativo
-            var originalX = 1070;
-            var originalY = 295;
+            var originalX_okbutton = 1070;
+            var originalY_okbutton = 295;
 
-            this.okbutton = this.add.image(originalX, originalY, "okbutton").setOrigin(0, 0);
+            this.okbutton = this.add.image(originalX_okbutton, originalY_okbutton, "okbutton").setOrigin(0, 0);
             this.okbutton.setDisplaySize(130, 70); // (+ estica, + comprime)
             this.okbutton.setScale(1.1, 0.9);
 
@@ -156,33 +156,21 @@ class GameScene extends Phaser.Scene {
                 this.setScale(1, 0.8); // Diminui o tamanho horizontal do botão ao ser pressionado
             });
 
+            var textoTotal = this.add.text(1300, 160, '', { fontFamily: 'Arial', fontSize: 24, color: '#000000' });
             // Evento quando o botão é solto
             this.okbutton.on('pointerup', function () {
                 this.setScale(1.1, 0.9); // Retorna o tamanho do botão ao normal ao soltar
+                if (total !== 0) {
+                    // Arredonda o valor total para duas casas decimais
+                    total = Math.round(total * 100) / 100;
+                    textoTotal.setText('Valor: ' + total.toFixed(2)); // Exibe o valor arredondado com duas casas decimais
+                }
             });
 
             this.seta = this.add.image(200,580, "seta").setOrigin(0,0);
             this.seta.setDisplaySize(90, 60);//(+ estica, + comprime)
             this.wallet = this.add.image(50,550, "wallet").setOrigin(0,0);
             this.wallet.setDisplaySize(120,100);//(+ estica, + comprime)
-
-            //
-            var originalXseta = 1070;
-            var originalYseta = 240;
-            this.setaparatras = this.add.image(originalXseta,originalYseta, "setaparatras").setOrigin(0,0);
-            this.setaparatras.setDisplaySize(130, 50);//(+ estica, + comprime)
-            this.setaparatras.setScale(1.1,0.9);
-
-            this.setaparatras.setInteractive();
-
-            this.setaparatras.on('pointerdown', function(){
-                this.setScale(1, 0.8); // Diminui o tamanho horizontal do botão ao ser pressionado
-            });
-
-            // Evento quando o botão é solto
-            this.setaparatras.on('pointerup', function () {
-                this.setScale(1.1, 0.9); // Retorna o tamanho do botão ao normal ao soltar
-            });
 
             this.textocarrinho = this.add.text(150,500, "Paga com o mínimo possível.", {fontFamily: 'Arial', fontSize: '30px'}).setOrigin(0,0);
 
@@ -225,10 +213,10 @@ class GameScene extends Phaser.Scene {
             
 
             const randomIndex = Phaser.Math.Between(0, this.imageList.length - 1);
-            const randomImageName1 = this.imageList[randomIndex];
+            const randomImageName = this.imageList[randomIndex];
 
 
-            const randomImageName =   "gelado_40a120centimos";
+            //const randomImageName =   "gelado_40a120centimos";
             // Adiciona a imagem carregada ao jogo
             var etiqueta;
             var randomImage;
@@ -301,14 +289,13 @@ class GameScene extends Phaser.Scene {
                 "euros2": { valor: 2.00 },
                 "euros5_completos": { valor: 5.00 },
                 "euros10_completos": { valor: 10.00 },
-                "euros20_completos": { valor: 20.00 }
+                //"euros20_completos": { valor: 20.00 }
             };  
             
             // Lista de moedas disponíveis
             var moedasDisponiveis = Object.keys(imagensValoresDinheiro);
 
             // Inicializar variáveis
-            var valorInicial = parseFloat(preco_produto); 
             var moedasEscolhidas = [];
             var valorTotalEscolhido = 0;
 
@@ -317,9 +304,11 @@ class GameScene extends Phaser.Scene {
                 // Escolher uma moeda aleatória
                 var moedaAleatoria = moedasDisponiveis[Math.floor(Math.random() * moedasDisponiveis.length)];
                 // Verificar se a moeda é uma nota e se o preço do produto é menor que 10€
-                if ((moedaAleatoria === "euros20_completos" || 
-                    moedaAleatoria === "euros10_completos" || 
-                    moedaAleatoria === "euros5_completos") && preco_produto < 10) {
+                if //((moedaAleatoria === "euros20_completos" || 
+                    (moedaAleatoria === "euros10_completos" 
+                    //|| moedaAleatoria === "euros5_completos"
+                     
+                    && preco_produto < 10) {
                     continue; // Se for uma nota e o preço do produto for menor que 10€, continue para a próxima iteração
                     //fica muito facil se for notas e o preço do produto for inferior a 10 caso as moedas pequenas nao cheguem
                 }
@@ -339,10 +328,10 @@ class GameScene extends Phaser.Scene {
                 }
             }
             
-
             console.log("Valor: " + valorTotalEscolhido);
             console.log("Moedas: " + moedasEscolhidas.join(", "));
 
+            var total = 0;
 
             var count_cent1 = 0;
             var count_cent2 = 0;
@@ -354,9 +343,8 @@ class GameScene extends Phaser.Scene {
             var count_euros2 = 0;
             var count_euros5_completos = 0;
             var count_euros10_completos = 0;
-            var count_euros20_completos = 0;
-            var posicoesMoedas = {}; // Usando um objeto vazio
-
+            //var count_euros20_completos = 0;
+            var moedasCaixa = [];
             // Configurar moedas para serem arrastáveis e adicionar eventos de drag para cada moeda
             moedasEscolhidas.forEach(function(moeda) {
                 let novaMoeda;
@@ -401,28 +389,142 @@ class GameScene extends Phaser.Scene {
                         novaMoeda = this.add.image(380 + 5 * count_euros10_completos, 580 - 5 * count_euros10_completos, "euros10_completos").setOrigin(0, 0);
                         count_euros10_completos++;
                         break;
-                    case "euros20_completos":
-                        novaMoeda = this.add.image(450 + 5 * count_euros20_completos, 575 - 5 * count_euros20_completos, "euros20_completos").setOrigin(0, 0);
-                        count_euros20_completos++;
-                        break;
+                    //case "euros20_completos":
+                      //  novaMoeda = this.add.image(450 + 5 * count_euros20_completos, 575 - 5 * count_euros20_completos, "euros20_completos").setOrigin(0, 0);
+                      //  count_euros20_completos++;
+                      //  break;
                     // Adicione os outros casos para as outras moedas da mesma maneira
                 }
 
                 if (novaMoeda) {
-                    novaMoeda.setDisplaySize(50, 50);
+                    if(moeda == "euros5_completos" ||
+                    moeda == "euros10_completos"){
+                        novaMoeda.setDisplaySize(50, 80);
+                    }
+                    //moeda != "euros20_completos")
+                    else {
+                        novaMoeda.setDisplaySize(50, 50);
+                    }
                     novaMoeda.setInteractive({ draggable: true });
+
+                    var initX;
+                    var initY;
+                    var originalScale;
+
                     //ao arrastar muda de cor
                     novaMoeda.on('dragstart', function(pointer) {
-                        novaMoeda.setTint(0xff0000);
+                        initX = novaMoeda.x;
+                        initY = novaMoeda.y;
+                        originalScale = novaMoeda.scaleX;
                     });
-                    //volta a mesma cor
+
                     novaMoeda.on('dragend', function(pointer) {
-                        novaMoeda.clearTint();
+                        function getRandomNumber(min, max) {
+                            return Math.random() * (max - min) + min;
+                        }
+                        
+                        // Adiciona um valor aleatório entre 0 e 30 para x e y
+                        var randomOffsetX = getRandomNumber(0, 30);
+                        var randomOffsetY = getRandomNumber(0, 30);
+                        
+                        // Verifica se a posição final está dentro das coordenadas especificadas
+                        if (novaMoeda.x > 1020 && novaMoeda.x < 1430 && novaMoeda.y > 380 && novaMoeda.y < 580) {
+                            
+                            // Define a posição final e outras propriedades da moeda
+                            if(moeda == "centimo1") {
+                                novaMoeda.setPosition(1025 + randomOffsetX, 578 - randomOffsetY);
+                                novaMoeda.setScale(0.2);
+                                total += 0.01;
+                            } else if(moeda == "centimos2") {
+                                novaMoeda.setPosition(1115 + randomOffsetX, 575 - randomOffsetY);
+                                novaMoeda.setScale(0.2);
+                                total += 0.02;
+                            } else if(moeda == "centimos5") {
+                                novaMoeda.setPosition(1210 + randomOffsetX, 571 - randomOffsetY);
+                                novaMoeda.setScale(0.2);
+                                total += 0.05;
+                            } else if(moeda == "centimos10") {
+                                novaMoeda.setPosition(1310 + randomOffsetX, 569 - randomOffsetY);
+                                novaMoeda.setScale(0.19);
+                                total += 0.10;
+                            } else if(moeda == "centimos20") {
+                                novaMoeda.setPosition(1410 + randomOffsetX, 567 - randomOffsetY);
+                                novaMoeda.setScale(0.18);
+                                total += 0.20;
+                            } else if(moeda == "centimos50") {
+                                novaMoeda.setPosition(1410 + randomOffsetX, 500 - randomOffsetY);
+                                novaMoeda.setScale(0.17);
+                                total += 0.50;
+                            } else if(moeda == "euro1") {
+                                novaMoeda.setPosition(1310 + randomOffsetX, 500 - randomOffsetY);
+                                novaMoeda.setScale(0.14);
+                                total += 1.0;
+                            } else if(moeda == "euros2") {
+                                novaMoeda.setPosition(1210 + randomOffsetX, 500 - randomOffsetY);
+                                novaMoeda.setScale(0.14);
+                                total += 2.0;
+                            } else if(moeda == "euros5_completos") {
+                                novaMoeda.setPosition(1127, 477);
+                                novaMoeda.setTexture('euros5');
+                                novaMoeda.setScale(0.29);
+                                total += 5.0;
+                            } else if(moeda == "euros10_completos") {
+                                novaMoeda.setPosition(1035, 477);
+                                novaMoeda.setTexture('euros10');
+                                novaMoeda.setScale(0.28);
+                                total += 10.0;
+                            }
+                            // Adicionar a moeda arrastada ao array de moedas arrastadas
+                            moedasCaixa.push({
+                                moeda: novaMoeda,
+                                x: initX,
+                                y: initY,
+                                scale: originalScale
+                            });
+                            
+                        } else {
+                            // Caso contrário, retorna à posição original
+                            novaMoeda.setPosition(initX, initY); 
+
+                        }
                     });
+
+                    //
+                    var originalXseta = 1070;
+                    var originalYseta = 240;
+                    this.setaparatras = this.add.image(originalXseta,originalYseta, "setaparatras").setOrigin(0,0);
+                    this.setaparatras.setDisplaySize(130, 50);//(+ estica, + comprime)
+                    this.setaparatras.setScale(1.1,0.9);
+                    this.setaparatras.setInteractive();
+
+                    this.setaparatras.on('pointerdown', function(){
+                        this.setScale(1, 0.8); // Diminui o tamanho horizontal do botão ao ser pressionado
+                    });
+                    this.setaparatras.on('pointerup', function () {
+                        this.setScale(1.1, 0.9); // Retorna o tamanho do botão ao normal ao soltar
+                        console.log(moedasCaixa);
+                        if (moedasCaixa.length > 0){
+                            var ultima =  moedasCaixa.pop();
+                            if (ultima.moeda.texture.key == "euros5") {
+                                ultima.moeda.setTexture("euros5_completos");
+                            }
+                            if (ultima.moeda.texture.key == "euros10") {
+                                ultima.moeda.setTexture("euros10_completos");
+                            }
+                            ultima.moeda.x = ultima.x;
+                            ultima.moeda.y = ultima.y;
+                            ultima.moeda.setScale(ultima.scale); // Restaura a escala original
+                        }
+                    });
+
                     //atualiza a posição
+
+                    var coordenadasTexto = this.add.text(16, 16, '', { fontSize: '16px', fill: '#ffffff' });
                     this.input.on('drag', function(pointer, gameObject, dragX, dragY) {
                         gameObject.x = dragX;
                         gameObject.y = dragY;
+
+                        coordenadasTexto.setText('Posição X: ' + gameObject.x + '\nPosição Y: ' + gameObject.y);
                     });
                 }
             }, this);
@@ -472,10 +574,10 @@ class GameScene extends Phaser.Scene {
 
             ///
             // botao ok iterativo
-            var originalX = 1070;
-            var originalY = 295;
+            var originalX_okbutton = 1070;
+            var originalY_okbutton = 295;
             
-            this.okbutton = this.add.image(originalX, originalY, "okbutton").setOrigin(0, 0);
+            this.okbutton = this.add.image(originalX_okbutton, originalY_okbutton, "okbutton").setOrigin(0, 0);
             this.okbutton.setDisplaySize(130, 70); // (+ estica, + comprime)
             this.okbutton.setScale(1.1, 0.9);
 
@@ -515,6 +617,7 @@ class GameScene extends Phaser.Scene {
             this.setaparatras.on('pointerup', function () {
                 this.setScale(1.1, 0.9); // Retorna o tamanho do botão ao normal ao soltar
             });
+        
             ///
             this.textocaixa = this.add.text(1170,445, "Dá o troco.", {fontFamily: 'Arial', fontSize: '30px'}).setOrigin(0,0);
             
@@ -735,3 +838,4 @@ const config = {
 
 // Criação do objeto de jogo com base na configuração definida
 const game = new Phaser.Game(config);
+
