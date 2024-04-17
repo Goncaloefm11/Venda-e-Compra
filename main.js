@@ -61,49 +61,49 @@ class GameScene extends Phaser.Scene {
     }
 
     preload() {
-        this.load.image("backgroundSQ", "./assets/backgroundSQ.png");
-        this.load.image("backgroundSQ2", "./assets/backgroundSQ2.png");
-        this.load.image("meninocarrinho", "./assets/meninocarrinho.png");
-        this.load.image("homemcaixa", "./assets/homemcaixa.png");
-        this.load.image("btcreditos", "./assets/btcreditos.png");
-        this.load.image("btinfo", "./assets/btinfo.png");
-        this.load.image("titulo", "./assets/titulo.png");
-        this.load.image("bthome", "./assets/bthome.png");
-        this.load.image("caixaregistadora", "./assets/caixaregistadora.png");
-        this.load.image("okbutton", "./assets/okbutton.png");
-        this.load.image("seta", "./assets/seta.png");
-        this.load.image("setaparatras", "./assets/setaparatras.png");
-        this.load.image("wallet", "./assets/wallet.png");
-        this.load.image("centimo1", "./assets/1centimo.png");
-        this.load.image("euro1", "./assets/1euro.png");
-        this.load.image("centimos2", "./assets/2centimos.png");
-        this.load.image("euros2", "./assets/2euros.png");
-        this.load.image("centimos5", "./assets/5centimos.png");
-        this.load.image("euros5_completos", "./assets/5euros-completos.png");
-        this.load.image("euros5", "./assets/5euros.png");
-        this.load.image("centimos10", "./assets/10centimos.png");
-        this.load.image("euros10_completos", "./assets/10euros-completos.png");
-        this.load.image("euros10", "./assets/10euros.png");
-        this.load.image("centimos20", "./assets/20centimos.png");
-        this.load.image("euros20_completos", "./assets/20euros-completos.png");
-        this.load.image("euros20", "./assets/20euros.png");
-        this.load.image("centimos50", "./assets/50centimos.png");
-        this.load.image("etiqueta", "./assets/etiqueta.png");
-        this.load.image("imagemDinheiro", "./assets/imagemDinheiro.png");
-        this.load.image("btlogin", "./assets/btlogin.png");
-        this.load.image("btlogout", "./assets/btlogout.png");
-        this.load.image("btnotok", "./assets/btnotok.png");
-        this.load.image("btok", "./assets/btok.png");
-        this.load.image("btplayagain", "./assets/btplayagain.png");
-        this.load.image("login", "./assets/login.png");
+        this.load.image("backgroundSQ", "/assets/backgroundSQ.png");
+        this.load.image("backgroundSQ2", "/assets/backgroundSQ2.png");
+        this.load.image("meninocarrinho", "/assets/meninocarrinho.png");
+        this.load.image("homemcaixa", "/assets/homemcaixa.png");
+        this.load.image("btcreditos", "/assets/btcreditos.png");
+        this.load.image("btinfo", "/assets/btinfo.png");
+        this.load.image("titulo", "/assets/titulo.png");
+        this.load.image("bthome", "/assets/bthome.png");
+        this.load.image("caixaregistadora", "/assets/caixaregistadora.png");
+        this.load.image("okbutton", "/assets/okbutton.png");
+        this.load.image("seta", "/assets/seta.png");
+        this.load.image("setaparatras", "/assets/setaparatras.png");
+        this.load.image("wallet", "/assets/wallet.png");
+        this.load.image("centimo1", "/assets/1centimo.png");
+        this.load.image("euro1", "/assets/1euro.png");
+        this.load.image("centimos2", "/assets/2centimos.png");
+        this.load.image("euros2", "/assets/2euros.png");
+        this.load.image("centimos5", "/assets/5centimos.png");
+        this.load.image("euros5_completos", "/assets/5euros-completos.png");
+        this.load.image("euros5", "/assets/5euros.png");
+        this.load.image("centimos10", "/assets/10centimos.png");
+        this.load.image("euros10_completos", "/assets/10euros-completos.png");
+        this.load.image("euros10", "/assets/10euros.png");
+        this.load.image("centimos20", "/assets/20centimos.png");
+        this.load.image("euros20_completos", "/assets/20euros-completos.png");
+        this.load.image("euros20", "/assets/20euros.png");
+        this.load.image("centimos50", "/assets/50centimos.png");
+        this.load.image("etiqueta", "/assets/etiqueta.png");
+        this.load.image("imagemDinheiro", "/assets/imagemDinheiro.png");
+        this.load.image("btlogin", "/assets/btlogin.png");
+        this.load.image("btlogout", "/assets/btlogout.png");
+        this.load.image("btnotok", "/assets/btnotok.png");
+        this.load.image("btok", "/assets/btok.png");
+        this.load.image("btplayagain", "/assets/btplayagain.png");
+        this.load.image("login", "/assets/login.png");
 
 
-        this.load.image("banana_de10a20centimos", "./assets/banana-de10a20centimos.png");
-        this.load.image("chapeu_8a20euros", "./assets/chapeu-8a20euros.png");
-        this.load.image("chavena_2a4euros", "./assets/chavena-2a4euros.png");
-        this.load.image("gelado_40a120centimos", "./assets/gelado-40a120centimos.png");
-        this.load.image("pera_10a20centimos", "./assets/pera-10a20centimos.png");
-        this.load.image("tshirt_5a18euros", "./assets/tshirt-5a18euros.png");
+        this.load.image("banana_de10a20centimos", "/assets/banana-de10a20centimos.png");
+        this.load.image("chapeu_8a20euros", "/assets/chapeu-8a20euros.png");
+        this.load.image("chavena_2a4euros", "/assets/chavena-2a4euros.png");
+        this.load.image("gelado_40a120centimos", "/assets/gelado-40a120centimos.png");
+        this.load.image("pera_10a20centimos", "/assets/pera-10a20centimos.png");
+        this.load.image("tshirt_5a18euros", "/assets/tshirt-5a18euros.png");
 
     }
     
