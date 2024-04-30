@@ -1379,38 +1379,3 @@ const config = {
 // Criação do objeto de jogo com base na configuração definida
 const game = new Phaser.Game(config);
 var infoUser = new loginInfo();
-        this.btlogin.on('pointerout', () => {
-            if (this.menuInicial == true) {
-                this.tweens.add({
-                    targets: this.btlogin,
-                    scale: { value: 0.5, duration: 200 }, // Retorna ao tamanho original em 200ms
-                    ease: 'Linear'
-                });
-            }
-        });
-        
-
-    }
-
-    update() {} // Função de atualização do jogo, chamada automaticamente pelo Phaser em cada frame
-
-} 
-
-// Configuração do jogo
-const config = {
-    type: Phaser.AUTO, // Tipo de renderização WebGL
-    width: sizes.width, // Largura do jogo
-    height: sizes.height, // Altura do jogo
-    scene: [GameScene], // Array de cenas do jogo, neste caso, apenas uma cena (GameScene)
-    scale: {
-        mode: Phaser.Scale.FIT, // Ajusta o jogo para caber na janela do navegador
-        autoCenter: Phaser.Scale.CENTER_BOTH // Centraliza o jogo na janela do navegador
-    },
-    backgroundColor: "#ffffff",
-    parent: 'divId',
-    fullscreenTarget: 'divId',
-    scene: [GameScene],
-}
-
-// Criação do objeto de jogo com base na configuração definida
-const game = new Phaser.Game(config);
