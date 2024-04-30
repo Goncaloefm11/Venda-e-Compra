@@ -1,5 +1,7 @@
 // Importa a biblioteca Phaser
 import Phaser from 'phaser';
+import { login } from './backEndconnector.js';
+import { loginInfo} from './logininfo.js';
 
 // Define as dimensões do jogo
 const sizes = {
@@ -53,6 +55,9 @@ class GameScene extends Phaser.Scene {
         this.imagemDinheiro;
         this.pera_10a20centimos;
         this.tshirt_5a18euros;
+        this.percentagemAcerto = 0.00;
+        this.total_cliquesOK = 0;
+        this.total_Acertos = 0;
 
         this.imageList = [ "banana_de10a20centimos", 
         "chapeu_8a20euros", "chavena_2a4euros",
@@ -61,54 +66,54 @@ class GameScene extends Phaser.Scene {
     }
 
     preload() {
-        this.load.image("backgroundSQ", "/assets/backgroundSQ.png");
-        this.load.image("backgroundSQ2", "/assets/backgroundSQ2.png");
-        this.load.image("meninocarrinho", "/assets/meninocarrinho.png");
-        this.load.image("homemcaixa", "/assets/homemcaixa.png");
-        this.load.image("btcreditos", "/assets/btcreditos.png");
-        this.load.image("btinfo", "/assets/btinfo.png");
-        this.load.image("titulo", "/assets/titulo.png");
-        this.load.image("bthome", "/assets/bthome.png");
-        this.load.image("caixaregistadora", "/assets/caixaregistadora.png");
-        this.load.image("okbutton", "/assets/okbutton.png");
-        this.load.image("seta", "/assets/seta.png");
-        this.load.image("setaparatras", "/assets/setaparatras.png");
-        this.load.image("wallet", "/assets/wallet.png");
-        this.load.image("centimo1", "/assets/1centimo.png");
-        this.load.image("euro1", "/assets/1euro.png");
-        this.load.image("centimos2", "/assets/2centimos.png");
-        this.load.image("euros2", "/assets/2euros.png");
-        this.load.image("centimos5", "/assets/5centimos.png");
-        this.load.image("euros5_completos", "/assets/5euros-completos.png");
-        this.load.image("euros5", "/assets/5euros.png");
-        this.load.image("centimos10", "/assets/10centimos.png");
-        this.load.image("euros10_completos", "/assets/10euros-completos.png");
-        this.load.image("euros10", "/assets/10euros.png");
-        this.load.image("centimos20", "/assets/20centimos.png");
-        this.load.image("euros20_completos", "/assets/20euros-completos.png");
-        this.load.image("euros20", "/assets/20euros.png");
-        this.load.image("centimos50", "/assets/50centimos.png");
-        this.load.image("etiqueta", "/assets/etiqueta.png");
-        this.load.image("imagemDinheiro", "/assets/imagemDinheiro.png");
-        this.load.image("btlogin", "/assets/btlogin.png");
-        this.load.image("btlogout", "/assets/btlogout.png");
-        this.load.image("btnotok", "/assets/btnotok.png");
-        this.load.image("btok", "/assets/btok.png");
-        this.load.image("btplayagain", "/assets/btplayagain.png");
-        this.load.image("login", "/assets/login.png");
+        this.load.image("backgroundSQ", "./assets/backgroundSQ.png");
+        this.load.image("backgroundSQ2", "./assets/backgroundSQ2.png");
+        this.load.image("meninocarrinho", "./assets/meninocarrinho.png");
+        this.load.image("homemcaixa", "./assets/homemcaixa.png");
+        this.load.image("btcreditos", "./assets/btcreditos.png");
+        this.load.image("btinfo", "./assets/btinfo.png");
+        this.load.image("titulo", "./assets/titulo.png");
+        this.load.image("bthome", "./assets/bthome.png");
+        this.load.image("caixaregistadora", "./assets/caixaregistadora.png");
+        this.load.image("okbutton", "./assets/okbutton.png");
+        this.load.image("seta", "./assets/seta.png");
+        this.load.image("setaparatras", "./assets/setaparatras.png");
+        this.load.image("wallet", "./assets/wallet.png");
+        this.load.image("centimo1", "./assets/1centimo.png");
+        this.load.image("euro1", "./assets/1euro.png");
+        this.load.image("centimos2", "./assets/2centimos.png");
+        this.load.image("euros2", "./assets/2euros.png");
+        this.load.image("centimos5", "./assets/5centimos.png");
+        this.load.image("euros5_completos", "./assets/5euros-completos.png");
+        this.load.image("euros5", "./assets/5euros.png");
+        this.load.image("centimos10", "./assets/10centimos.png");
+        this.load.image("euros10_completos", "./assets/10euros-completos.png");
+        this.load.image("euros10", "./assets/10euros.png");
+        this.load.image("centimos20", "./assets/20centimos.png");
+        this.load.image("euros20_completos", "./assets/20euros-completos.png");
+        this.load.image("euros20", "./assets/20euros.png");
+        this.load.image("centimos50", "./assets/50centimos.png");
+        this.load.image("etiqueta", "./assets/etiqueta.png");
+        this.load.image("imagemDinheiro", "./assets/imagemDinheiro.png");
+        this.load.image("btlogin", "./assets/btlogin.png");
+        this.load.image("btlogout", "./assets/btlogout.png");
+        this.load.image("btnotok", "./assets/btnotok.png");
+        this.load.image("btok", "./assets/btok.png");
+        this.load.image("btplayagain", "./assets/btplayagain.png");
+        this.load.image("login", "./assets/login.png");
 
 
-        this.load.image("banana_de10a20centimos", "/assets/banana-de10a20centimos.png");
-        this.load.image("chapeu_8a20euros", "/assets/chapeu-8a20euros.png");
-        this.load.image("chavena_2a4euros", "/assets/chavena-2a4euros.png");
-        this.load.image("gelado_40a120centimos", "/assets/gelado-40a120centimos.png");
-        this.load.image("pera_10a20centimos", "/assets/pera-10a20centimos.png");
-        this.load.image("tshirt_5a18euros", "/assets/tshirt-5a18euros.png");
+        this.load.image("banana_de10a20centimos", "./assets/banana-de10a20centimos.png");
+        this.load.image("chapeu_8a20euros", "./assets/chapeu-8a20euros.png");
+        this.load.image("chavena_2a4euros", "./assets/chavena-2a4euros.png");
+        this.load.image("gelado_40a120centimos", "./assets/gelado-40a120centimos.png");
+        this.load.image("pera_10a20centimos", "./assets/pera-10a20centimos.png");
+        this.load.image("tshirt_5a18euros", "./assets/tshirt-5a18euros.png");
 
     }
-    
 
     create() {
+        const self = this;
         // Define uma variável para controlar se o menu inicial está ativo
         this.menuInicial = true;
 
@@ -117,9 +122,16 @@ class GameScene extends Phaser.Scene {
         // Layout 1: Configura o fundo e os personagens para o menu inicial
         this.background = this.add.image(0,0,"backgroundSQ").setOrigin(0,0); // Fundo
         this.background.setDisplaySize(sizes.width, sizes.height); // Define o tamanho do fundo
+        var percentagem = this.add.text(1100,0,'Acertos : ' + this.percentagemAcerto.toFixed(2) + "%",{ fontFamily: 'Arial', fontSize: 20, color: '#ffffff' });
         //this.backgroundSQ = this.add.sprite(0.5*width,0.5*height,'backgroundSQ');
         //this.backgroundSQ.setScale(1.5);
 
+        // Função para calcular a porcentagem de acertos e atualizar o texto correspondente
+        const atualizarPercentagem = () => {
+            this.percentagemAcerto = (self.total_Acertos / self.total_cliquesOK) * 100;
+            percentagem.setText("Acertos : " + this.percentagemAcerto.toFixed(2) + "%");
+        };
+                    
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -129,21 +141,31 @@ class GameScene extends Phaser.Scene {
         this.meninocarrinho.setScale(1); // Define a escala do personagem
             // Configuração do evento de clique para o personagem "meninocarrinho"
             this.meninocarrinho.on("pointerup", (pointer) => {
+                console.log("dentro: " + this.percentagemAcerto);
                 // Atualiza o estado do menu inicial
                 this.menuInicial = false;
+                percentagem.setDepth(1);
                 this.homemcaixa.destroy();
-                this.meninocarrinho.destroy();
+                this.meninocarrinho.disableInteractive();
 
                 // Configura o layout para a tela de compra
                 this.backgroundSQ2 = this.add.image(0,0, "backgroundSQ2").setOrigin(0,0);
                 this.backgroundSQ2.setDisplaySize(sizes.width,sizes.height);
-                this.meninocarrinho = this.add.image(20,15, "meninocarrinho").setOrigin(0,0);
-                this.meninocarrinho.setDisplaySize(100,120);
+                this.meninocarrinho2 = this.add.image(20,15, "meninocarrinho").setOrigin(0,0);
+                this.meninocarrinho2.setDisplaySize(100,120);
                 this.titulo = this.add.image(500,35, "titulo").setOrigin(0,0);
                 this.titulo.setDisplaySize(sizes.width - 1000, sizes.height - 630);
                 this.caixaregistadora = this.add.image(950,120, "caixaregistadora").setOrigin(0,0);//(+ vai para a direita, + vai para baixo)
                 this.caixaregistadora.setDisplaySize(600,535);//(+ estica, + comprime)
 
+                this.btplayagain = this.add.image(730, 420, "btplayagain").setOrigin(0, 0);
+                this.btplayagain.setDisplaySize(0, 0);
+                this.btplayagain.setScale(0.5, 0.5);
+                this.btplayagain.setVisible(false); // Define o botão como invisível inicialmente
+                
+                
+                this.btplayagain.setDepth(1);
+                var jogarnovamente = this;
 
                 this.okbutton = this.add.image(1070, 295, "okbutton").setOrigin(0, 0);
                 this.okbutton.setDisplaySize(130, 70); // (+ estica, + comprime)
@@ -154,53 +176,10 @@ class GameScene extends Phaser.Scene {
                     this.setScale(1.05, 0.85); // Diminui o tamanho horizontal do botão ao ser pressionado
                 });
 
-                // Evento quando o botão é solto
-                this.okbutton.on('pointerup', function () {
-                    this.setScale(1.1, 0.9); // Retorna o tamanho do botão ao normal ao soltar
-                
-                    // Arredonda o valor total para duas casas decimais
-                    total = Math.round(total * 100) / 100;
-                    if (total == 0.00) {
-                        textoTotal.setVisible(false);
-                    } else {
-                        textoTotal.setVisible(true);
-                        textoTotal.setText('Valor: ' + total.toFixed(2)); // Exibe o valor arredondado com duas casas decimais
-                    }
-                
-                    // Calcula o pagamento mínimo usando as moedas disponíveis
-                    // Recebe o valor das moedas que tem na carteira, o preço do produto e as moedas disponiveis, array de moedasUsadas vazio inicialmente
-                    var melhorPagamento = calcularPagamentoMinimo(preco_produto, moedasEscolhidasClone);
-                
-                    // Define o texto com base no pagamento mínimo
-                    if (total === melhorPagamento) {
-                        txt.setVisible(true);
-                        txt.setText('Pagamento mínimo atingido!');
-                        jogaDeNovo.btplayagain.setVisible(true);
-                        jogaDeNovo.btplayagain.setInteractive(true);
-
-                
-                    } else if (total < melhorPagamento && total > 0) {
-                        txt.setVisible(true);
-                        txt.setText('Pagamento mínimo não atingido!');
-                        jogaDeNovo.btplayagain.setVisible(false);
-                        jogaDeNovo.btplayagain.setInteractive(false);
-                        
-                    } else if (total > melhorPagamento) {
-                        txt.setVisible(true);
-                        txt.setText('Pagamento mínimo superado');
-                        jogaDeNovo.btplayagain.setVisible(false);
-                        jogaDeNovo.btplayagain.setInteractive(false);
-                        
-                    } else {
-                        txt.setVisible(false); // Oculta o texto se não houver nenhum valor na caixa
-                        jogaDeNovo.btplayagain.setVisible(false);
-                        jogaDeNovo.btplayagain.setInteractive(false);
-                        
-                    }
-                });
-                
                 var textoTotal = this.add.text(1300, 160, '', { fontFamily: 'Arial', fontSize: 24, color: '#000000' });
-                var txt = this.add.text(900, 160, '', { fontFamily: 'Arial', fontSize: 24, color: '#000000' });
+                var txt = this.add.text(1063, 140, '', { fontFamily: 'Arial', fontSize: 16, color: '#000000' });
+                var texto_notas5 = this.add.text(1150, 450, '', { fontFamily: 'Arial', fontSize: 20, color: '#ffffff' });
+                var texto_notas10 = this.add.text(1058, 450, '', { fontFamily: 'Arial', fontSize: 20, color: '#ffffff' });
 
                 function calcularPagamentoMinimo(precoProduto, dinheiro) {
                     // Ordena as moedas pelo valor em ordem decrescente
@@ -232,29 +211,85 @@ class GameScene extends Phaser.Scene {
                     calcular(0, 0);
                 
                     // Retorna o pagamento mínimo encontrado
-                    return pagamentoMinimo;
+                    return parseFloat(pagamentoMinimo.toFixed(2));
                 }
-                                
-                // Configura o botão btplayagain
-                this.btplayagain = this.add.image(730, 420, "btplayagain").setOrigin(0, 0);
-                this.btplayagain.setDisplaySize(0, 0);
-                this.btplayagain.setScale(0.5, 0.5);
-                this.btplayagain.setInteractive();
+                
+                // Evento quando o botão é solto
+                this.okbutton.on('pointerup', function () {
+                    this.setScale(1.1, 0.9); // Retorna o tamanho do botão ao normal ao soltar
 
-                // Oculta o botão btplayagain inicialmente
-                this.btplayagain.setVisible(false);
-                this.btplayagain.setInteractive(false);
-        
-                // Configurar evento de clique para a seta para trás
-                this.btplayagain.on('pointerdown', function () {
-                    this.setScale(0.48, 0.48); // Diminui o tamanho horizontal do botão ao ser pressionado
-                });
-        
-                this.btplayagain.on('pointerup', function () {
-                    this.setScale(0.5, 0.5); // Retorna o tamanho do botão ao normal ao soltar
-                });
+                    // Verifica se há notas de 5 ou de 10 na caixa e exibe a quantidade em forma de texto
+                    if (count_5 > 0) {
+                        texto_notas5.setVisible(true);
+                        texto_notas5.setText(count_5);
+                    }
+                    else {
+                        texto_notas5.setVisible(false);
+                    }
+                    if (count_10 > 0) {
+                        texto_notas10.setVisible(true);
+                        texto_notas10.setText(count_10);
+                    }
+                    else {
+                        texto_notas10.setVisible(false);
+                    }
 
-                const jogaDeNovo = this;
+                    // Arredonda o valor total para duas casas decimais
+                    total = Math.round(total * 100) / 100;
+                    if(total == 0.00){
+                        textoTotal.setVisible(false);
+                    }
+                    else {
+                        textoTotal.setVisible(true);
+                        textoTotal.setText('Valor: ' + total.toFixed(2)); // Exibe o valor arredondado com duas casas decimais
+                    
+                    }
+
+                    // Calcula o pagamento mínimo usando as moedas disponíveis
+                    //recebe o valor das moedas que tem na carteira, o preço do produto e as moedas disponiveis, array de moedasUsadas vazio inicialmente
+                    var melhorPagamento = calcularPagamentoMinimo(preco_produto, moedasEscolhidasClone);
+                    // Define o texto com base no pagamento mínimo
+                    if (total === melhorPagamento) {
+                        self.total_cliquesOK++;
+                        self.total_Acertos++;
+                        txt.setVisible(true);
+
+                        atualizarPercentagem();
+                        txt.setText('Pagamento \n   mínimo \n   atingido!');
+                        // jogar novamente aqui:
+                        jogarnovamente.btplayagain.setVisible(true);
+                        // Configurar evento de clique para a seta para trás
+                        jogarnovamente.btplayagain.setInteractive();
+                        jogarnovamente.btplayagain.on('pointerdown', function () {
+                            jogarnovamente.btplayagain.setScale(0.48, 0.48); // Diminui o tamanho horizontal do botão ao ser pressionado
+                            jogarnovamente.meninocarrinho.setInteractive(true);
+                            jogarnovamente.meninocarrinho.setPosition(730,320);
+                            jogarnovamente.btplayagain.destroy();
+
+                        });
+
+                        jogarnovamente.btplayagain.on('pointerup', function () {
+                            jogarnovamente.btplayagain.setScale(0.5, 0.5); // Retorna o tamanho do botão ao normal ao soltar
+                            jogarnovamente.meninocarrinho.destroy();
+                        });
+                        
+
+                        
+
+                    } else if (total < melhorPagamento && total > 0) {
+                        self.total_cliquesOK++;
+                        txt.setVisible(true);
+                        txt.setText('Pagamento \nmínimo não\n   atingido!');
+                        atualizarPercentagem();
+                    } else if (total > melhorPagamento) {
+                        self.total_cliquesOK++;
+                        txt.setVisible(true);
+                        txt.setText('Pagamento \n   mínimo \n superado!');
+                        atualizarPercentagem();
+                    } else {
+                        txt.setVisible(false); // Oculta o texto se não houver nenhum valor na caixa
+                    }
+                });
 
                 this.seta = this.add.image(200,580, "seta").setOrigin(0,0);
                 this.seta.setDisplaySize(90, 60);//(+ estica, + comprime)
@@ -296,13 +331,14 @@ class GameScene extends Phaser.Scene {
                     this.scene.start("scene-game"); // Inicia a cena do jogo
                     this.menuInicial = true; // Atualiza o estado do menu inicial
                 });
-
-
+                
                 // imagem do produto:
                 //const porque só pode ser chamado o random dentro desta função
-                var randomIndex = Phaser.Math.Between(0, this.imageList.length - 1);
-                var randomImageName = this.imageList[randomIndex];
+                const randomIndex = Phaser.Math.Between(0, this.imageList.length - 1);
+                const randomImageName = this.imageList[randomIndex];
 
+
+                //const randomImageName =   "gelado_40a120centimos";
                 // Adiciona a imagem carregada ao jogo
                 var etiqueta;
                 var randomImage;
@@ -319,7 +355,7 @@ class GameScene extends Phaser.Scene {
                     randomImage = this.add.image(400, 150, randomImageName).setOrigin(0, 0);
                     //// Feita
                 } else if (randomImageName === "chapeu_8a20euros") {
-                    coords = { x: 440, y: 350 };
+                    coords = { x: 430, y: 350 };
                     preco_produto = Phaser.Math.RND.realInRange(8.00, 20.00).toFixed(2);
                     etiqueta = this.add.image(430, 350, "etiqueta").setOrigin(0,0);
                     randomImage = this.add.image(370, 190, randomImageName).setOrigin(0, 0);
@@ -343,7 +379,7 @@ class GameScene extends Phaser.Scene {
                     randomImage = this.add.image(400, 150, randomImageName).setOrigin(0, 0);
                     randomImage.setDisplaySize(230,280);
                 } else if (randomImageName === "tshirt_5a18euros") {
-                    coords = { x: 415, y: 255 };
+                    coords = { x: 430, y: 255 };
                     preco_produto = Phaser.Math.RND.realInRange(5.00, 18.00).toFixed(2);
                     etiqueta = this.add.image(430, 260, "etiqueta").setOrigin(0,0);
                     randomImage = this.add.image(400, 180, randomImageName).setOrigin(0, 0);
@@ -361,6 +397,7 @@ class GameScene extends Phaser.Scene {
                     fontSize: '30px'
                 }).setOrigin(1.6, 1.2);
                 valor.angle += 18;
+                                
 
                 var imagensValoresDinheiro = {
                     "centimo1": { valor: 0.01 },
@@ -418,6 +455,7 @@ class GameScene extends Phaser.Scene {
         
 
                 var total = 0;
+                //contador para separar uma moeda/nota da anterior
                 var count_cent1 = 0;
                 var count_cent2 = 0;
                 var count_cent5 = 0;
@@ -428,6 +466,11 @@ class GameScene extends Phaser.Scene {
                 var count_euros2 = 0;
                 var count_euros5_completos = 0;
                 var count_euros10_completos = 0;
+
+                var count_5 = 0;
+                var count_10 = 0
+
+
                 //var count_euros20_completos = 0;
                 var moedasCaixa = [];
                 // Configurar moedas para serem arrastáveis e adicionar eventos de drag para cada moeda
@@ -547,13 +590,15 @@ class GameScene extends Phaser.Scene {
                                 } else if(moeda == "euros5_completos") {
                                     novaMoeda.setPosition(1127 + randomXnotas, 477);
                                     novaMoeda.setTexture('euros5');
-                                    novaMoeda.setScale(0.29);
+                                    novaMoeda.setScale(0.3);
                                     total += 5.0;
+                                    count_5++;
                                 } else if(moeda == "euros10_completos") {
                                     novaMoeda.setPosition(1035 + randomXnotas, 477);
                                     novaMoeda.setTexture('euros10');
-                                    novaMoeda.setScale(0.28);
+                                    novaMoeda.setScale(0.3);
                                     total += 10.0;
+                                    count_10++;
                                 }
                                 // Adicionar a moeda arrastada ao array de moedas arrastadas
                                 moedasCaixa.push({
@@ -570,8 +615,6 @@ class GameScene extends Phaser.Scene {
 
                             }
                         });
-
-
                         //atualiza a posição
 
                         var coordenadasTexto = this.add.text(16, 16, '', { fontSize: '16px', fill: '#ffffff' });
@@ -583,8 +626,8 @@ class GameScene extends Phaser.Scene {
                         });
                     }
                 }, this);
-                
-                //
+            
+
                 var originalXseta = 1070;
                 var originalYseta = 240;
                 this.setaparatras = this.add.image(originalXseta, originalYseta, "setaparatras").setOrigin(0,0);
@@ -600,34 +643,36 @@ class GameScene extends Phaser.Scene {
                 this.setaparatras.on('pointerup', function () {
                     this.setScale(1.1, 0.9); // Retorna o tamanho do botão ao normal ao soltar
                     if (moedasCaixa.length > 0) {
+                        // apaga o texto e o valor anteriormente escolhido, caso estejam visiveis
+                        txt.setVisible(false);
+                        textoTotal.setVisible(false);
+                        //
                         var ultima = moedasCaixa.pop();
                         if (ultima.moeda.texture.key == "euros5") {
+                            ultima.moeda.setScale(0.33, 0.28);
+                            ultima.moeda.x = ultima.x;
+                            ultima.moeda.y = ultima.y;
                             ultima.moeda.setTexture("euros5_completos");
                             total -= imagensValoresDinheiro[ultima.moeda.texture.key].valor;
-                            ultima.moeda.x = ultima.x;
-                            ultima.moeda.y = ultima.y;
-                            ultima.moeda.setDisplaySize(65, 100);
-                            ultima.moeda.setInteractive(true);
+                            count_5--;
                         }
                         else if (ultima.moeda.texture.key == "euros10") {
-                            ultima.moeda.setTexture("euros10_completos");
-                            total -= imagensValoresDinheiro[ultima.moeda.texture.key].valor;
+                            ultima.moeda.setScale(0.33,0.28);
                             ultima.moeda.x = ultima.x;
                             ultima.moeda.y = ultima.y;
-                            ultima.moeda.setDisplaySize(65, 100);
-                            ultima.moeda.setInteractive(true);
+                            ultima.moeda.setTexture("euros10_completos");
+                            total -= imagensValoresDinheiro[ultima.moeda.texture.key].valor;
+                            count_10--;
                         }
-                            else {
-                                ultima.moeda.x = ultima.x;
-                                ultima.moeda.y = ultima.y;
-                                ultima.moeda.setScale(ultima.scale); // Restaura a escala original
-                                total -= imagensValoresDinheiro[ultima.moeda.texture.key].valor;
-                                ultima.moeda.setInteractive(true);
-                            }
+                        else {
+                            ultima.moeda.x = ultima.x;
+                            ultima.moeda.y = ultima.y;
+                            ultima.moeda.setScale(ultima.scale); // Restaura a escala original
+                            total -= imagensValoresDinheiro[ultima.moeda.texture.key].valor;
+                        }
+                        ultima.moeda.setInteractive(true);
                     }
                 });
-                
-
         });
 
         
@@ -652,16 +697,18 @@ class GameScene extends Phaser.Scene {
 
         // Configuração do evento de clique para o personagem "homemcaixa"
         this.homemcaixa.on("pointerup", (pointer) => {
+            percentagem.setDepth(1);
             // Atualiza o estado do menu inicial
+            console.log("dentro Homem: " + this.percentagemAcerto);
             this.menuInicial = false;
             this.meninocarrinho.destroy();
-            this.homemcaixa.destroy();
+            this.homemcaixa.disableInteractive();
 
             // Configura o layout para a tela de venda
             this.backgroundSQ2 = this.add.image(0,0, "backgroundSQ2").setOrigin(0,0);
             this.backgroundSQ2.setDisplaySize(sizes.width,sizes.height);
-            this.homemcaixa = this.add.image(15,15, "homemcaixa").setOrigin(0,0);
-            this.homemcaixa.setDisplaySize(100,120);
+            this.homemcaixa2 = this.add.image(15,15, "homemcaixa").setOrigin(0,0);
+            this.homemcaixa2.setDisplaySize(100,120);
             this.titulo = this.add.image(500,35, "titulo").setOrigin(0,0);
             this.titulo.setDisplaySize(sizes.width - 1000, sizes.height - 630);
             this.caixaregistadora = this.add.image(950,120, "caixaregistadora").setOrigin(0,0);
@@ -669,34 +716,13 @@ class GameScene extends Phaser.Scene {
             this.caixaregistadora.setDisplaySize(600,535);
             
             ///
-
-            // Configura o botão btplayagain
-            this.btplayagain = this.add.image(730, 420, "btplayagain").setOrigin(0, 0);
-            this.btplayagain.setDisplaySize(0, 0);
-            this.btplayagain.setScale(0.5, 0.5);
-            this.btplayagain.setInteractive();
-
-            // Oculta o botão btplayagain inicialmente
-            this.btplayagain.setVisible(false);
-            this.btplayagain.setInteractive(false);
-    
-            // Configurar evento de clique para a seta para trás
-            this.btplayagain.on('pointerdown', function () {
-                this.setScale(0.48, 0.48); // Diminui o tamanho horizontal do botão ao ser pressionado
-            });
-    
-            this.btplayagain.on('pointerup', function () {
-                this.setScale(0.5, 0.5); // Retorna o tamanho do botão ao normal ao soltar
-            });
-
-            const jogaDeNovo = this;
-
             this.okbutton = this.add.image(1070, 295, "okbutton").setOrigin(0, 0);
             this.okbutton.setDisplaySize(130, 70); // (+ estica, + comprime)
             this.okbutton.setScale(1.1, 0.9);
 
             // Define as interações do mouse
             this.okbutton.setInteractive();
+
                         
             // Evento quando o botão é pressionado
             this.okbutton.on('pointerdown', function () {
@@ -707,6 +733,14 @@ class GameScene extends Phaser.Scene {
             var txt = this.add.text(1062, 160, '', { fontFamily: 'Arial', fontSize: 24, color: '#000000' });
             var total_troco = 0;
 
+            this.btplayagain = this.add.image(730, 420, "btplayagain").setOrigin(0, 0);
+            this.btplayagain.setDisplaySize(0, 0);
+            this.btplayagain.setScale(0.5, 0.5);
+            this.btplayagain.setVisible(false); // Define o botão como invisível inicialmente
+            
+            this.btplayagain.setDepth(1);
+
+            var jogarnovamente = this;
             
             // Evento quando o botão é solto
             this.okbutton.on('pointerup', function () {
@@ -717,26 +751,39 @@ class GameScene extends Phaser.Scene {
                 if(total_troco == 0.00){
                     textoTotal.setVisible(false);
                     txt.setVisible(false);
-                    jogaDeNovo.btplayagain.setVisible(false);
-                    jogaDeNovo.btplayagain.setInteractive(false);
                 }
                 else {
                     textoTotal.setVisible(true);
                     textoTotal.setText('Troco: ' + total_troco.toFixed(2)); // Exibe o valor arredondado com duas casas decimais
-                    jogaDeNovo.btplayagain.setVisible(false);
-                    jogaDeNovo.btplayagain.setInteractive(false);
 
                     if(total_troco === trocoCerto){
+                        self.total_Acertos++;
+                        self.total_cliquesOK++;
+                        atualizarPercentagem();
                         txt.setText('Parabéns!!!');
                         txt.setVisible(true);
-                        jogaDeNovo.btplayagain.setVisible(true);
-                        jogaDeNovo.btplayagain.setInteractive(true);
+                        // jogar novamente aqui:
+                        jogarnovamente.btplayagain.setVisible(true);
+                        // Configurar evento de clique para a seta para trás
+                        jogarnovamente.btplayagain.setInteractive();
+                        jogarnovamente.btplayagain.on('pointerdown', function () {
+                            jogarnovamente.btplayagain.setScale(0.48, 0.48); // Diminui o tamanho horizontal do botão ao ser pressionado
+                            jogarnovamente.homemcaixa.setInteractive(true);
+                            jogarnovamente.homemcaixa.setPosition(730,320);
+                            jogarnovamente.btplayagain.destroy();
+
+                        });
+
+                        jogarnovamente.btplayagain.on('pointerup', function () {
+                            jogarnovamente.btplayagain.setScale(0.5, 0.5); // Retorna o tamanho do botão ao normal ao soltar
+                            jogarnovamente.homemcaixa.destroy();
+                        });
                     }
                     else {
+                        self.total_cliquesOK++;
+                        atualizarPercentagem();
                         txt.setVisible(true);
                         txt.setText('Quase!!');
-                        jogaDeNovo.btplayagain.setVisible(false);
-                        jogaDeNovo.btplayagain.setInteractive(false);
                     }
                 }
                 
@@ -806,7 +853,6 @@ class GameScene extends Phaser.Scene {
             this.etiqueta.angle += 180;
             this.randomImage = this.add.image(400, 210, randomImageName).setOrigin(0, 0);
             this.randomImage.setDisplaySize(200, 200);
-
             
             // Verifica se o nome da imagem está na lista de coordenadas e define as coordenadas correspondentes
             if (randomImageName in etiquetaCoords) {
@@ -867,7 +913,6 @@ class GameScene extends Phaser.Scene {
                 
                     
                 var trocoCerto = 0.00; 
-                var valor = 0;
                 var moedasEscolhidas = [];
                 
                 for (var chave in moedasDisponiveis) {
@@ -987,7 +1032,6 @@ class GameScene extends Phaser.Scene {
                                         novaMoeda.setDisplaySize(50, 50);
                                     }
                                 novaMoeda.setPosition(posicaoFinal[novaMoeda.texture.key].x + posicaoFinal[novaMoeda.texture.key].s * 5, posicaoFinal[novaMoeda.texture.key].y - posicaoFinal[novaMoeda.texture.key].s * 5);
-                                console.log(posicaoFinal[novaMoeda.texture.key].x + posicaoFinal[novaMoeda.texture.key].s * 5, posicaoFinal[novaMoeda.texture.key].y - posicaoFinal[novaMoeda.texture.key].s * 5);
                                 posicaoFinal[novaMoeda.texture.key].s--;
                                 total_troco += posicaoFinal[novaMoeda.texture.key].valor;
 
@@ -1029,14 +1073,14 @@ class GameScene extends Phaser.Scene {
                             total_troco -= posicaoFinal[ultima.moeda.texture.key].valor;
                             ultima.moeda.x = ultima.x;
                             ultima.moeda.y = ultima.y;
-                            ultima.moeda.setScale(ultima.scale); // Restaura a escala original
+                            ultima.moeda.setScale(0.3); // Restaura a escala original
                             ultima.moeda.setTexture("euros5");
                         }
                         else if (ultima.moeda.texture.key == "euros10_completos") {
                             total_troco -= posicaoFinal[ultima.moeda.texture.key].valor;
                             ultima.moeda.x = ultima.x;
                             ultima.moeda.y = ultima.y;
-                            ultima.moeda.setScale(ultima.scale); // Restaura a escala original
+                            ultima.moeda.setScale(0.3); // Restaura a escala original
                             ultima.moeda.setTexture("euros10");
                         }
                         else {
@@ -1163,11 +1207,85 @@ class GameScene extends Phaser.Scene {
                 this.meninocarrinho.disableInteractive();
                 this.homemcaixa.disableInteractive();
                 // Adiciona a imagem 'login' quando o botão 'btlogin' é clicado
-                this.login = this.add.image(490, 200, "login").setOrigin(0,0);
+                this.login = this.add.image(490, 180, "login").setOrigin(0,0);
                 this.login.setDisplaySize(0,0);
                 this.login.setScale(1);
+                
 
-                this.btnotok = this.add.image(680, 500, "btnotok").setOrigin(0,0);
+                // Criar caixa de texto para o nome de usuário
+                let usernameText = this.add.text(820, 320, '', { 
+                    fontFamily: 'Arial', 
+                    fontSize: '16px', 
+                    color: '#ffffff',
+                    backgroundColor: 'rgba(150, 100, 200, 0.25)',
+                    padding: { 
+                        top: 5, 
+                        bottom: 5, 
+                        left: 5, 
+                        right: 5 
+                    },
+                    fixedWidth: 200,
+                    fixedHeight: 30,
+                    borderColor: '#ffffff',
+                    borderWidth: 2,
+                }).setOrigin(0.5);
+
+                // Criar caixa de texto para a senha
+                let passwordText = this.add.text(820, 440, '', { 
+                    fontFamily: 'Arial', 
+                    fontSize: '16px', 
+                    color: '#ffffff',
+                    backgroundColor: 'rgba(150, 100, 200, 0.25)',
+                    padding: { 
+                        top: 5, 
+                        bottom: 5, 
+                        left: 5, 
+                        right: 5 
+                    },
+                    fixedWidth: 200,
+                    fixedHeight: 30,
+                    borderColor: '#ffffff',
+                    borderWidth: 2,
+                }).setOrigin(0.5);
+
+                // Adicionar ouvinte de eventos de teclado uma única vez
+                this.input.keyboard.on('keydown', (event) => {
+                    const key = event.key;
+                    if (usernameText.active && /^[a-zA-Z0-9]$/.test(key) || (key === "Backspace" && usernameText.active)) {
+                        if (key === 'Backspace' && usernameText.text !== '') {
+                            usernameText.text = usernameText.text.slice(0, -1); // Apagar último caractere
+                        } else if (key !== 'Backspace') {
+                            usernameText.text += key;
+                        }
+                    }
+                    if (passwordText.active && /^[a-zA-Z0-9]$/.test(key) || (key === "Backspace" && passwordText.active)) {
+                        if (key === 'Backspace' && passwordText.text !== '') {
+                            passwordText.text = passwordText.text.slice(0, -1); // Apagar último caractere
+                        } else if (key !== 'Backspace') {
+                            passwordText.text += key;
+                        }
+                    }
+
+                });
+
+                // Ativar entrada de texto para o nome de usuário
+                usernameText.setInteractive();
+                usernameText.on('pointerdown', () => {
+                    passwordText.active = false;
+                    usernameText.active = true;
+                });
+
+                // Ativar entrada de texto para a senha
+                passwordText.setInteractive();
+                passwordText.on('pointerdown', () => {
+                    usernameText.active = false;
+                    passwordText.active = true;
+                });
+
+
+
+                // Adicionar lógica para os botões de submissão
+                this.btnotok = this.add.image(910, 180, "btnotok").setOrigin(0,0);
                 this.btnotok.setDisplaySize(0,0);
                 this.btnotok.setScale(0.4);
                 this.btnotok.setInteractive();
@@ -1176,69 +1294,44 @@ class GameScene extends Phaser.Scene {
                         this.login.destroy();
                         this.btnotok.destroy();
                         this.btok.destroy();
-                        
+                        this.meninocarrinho.setInteractive(true);
+                        this.homemcaixa.setInteractive(true);
+                        // Remover os campos de texto
+                        usernameText.destroy();
+                        passwordText.destroy();
+                    }
+                });
+    
         
-                    }
-                });
-                
-                this.btnotok.on('pointerover', () => {
-                    if (this.menuInicial == true) {
-                        this.tweens.add({
-                            targets: this.btnotok,
-                            scale: { value: 0.45, duration: 100 }, // Aumenta para 5% em 200ms
-                            ease: 'Linear' // Utiliza uma função de easing linear para uma transição suave
-                        });
-                    }
-                });
-                
-                this.btnotok.on('pointerout', () => {
-                    if (this.menuInicial == true) {
-                        this.tweens.add({
-                            targets: this.btnotok,
-                            scale: { value: 0.4, duration: 200 }, // Retorna ao tamanho original em 200ms
-                            ease: 'Linear'
-                        });
-                    }
-                });
-
-                this.btok = this.add.image(780, 500, "btok").setOrigin(0,0);
+                this.btok = this.add.image(730, 500, "btok").setOrigin(0,0);
                 this.btok.setDisplaySize(0,0);
                 this.btok.setScale(0.4);
                 this.btok.setInteractive();
                 this.btok.on('pointerdown', () => {
                     if (this.menuInicial == true) {
+                        // Remover os campos de texto
+                        var username = usernameText.text.trim();
+                        var password = passwordText.text.trim();
+                        login(username, password, this);
                         this.meninocarrinho.setInteractive(true);
                         this.homemcaixa.setInteractive(true);
                         this.login.destroy();
                         this.btnotok.destroy();
                         this.btok.destroy();
+                        // Remover os campos de texto
+                        usernameText.destroy();
+                        passwordText.destroy();
                         
+                    }
+                });
+                this.loginErrorMsg = this.add.text(1200, 0,"Utilizador ou Password Errados",{ fontFamily: 'font1',fontSize: 25,color: '#ff0000',align: 'center'});
+                this.loginErrorMsg.visible = false;
         
-                    }
-                });
-                
-                this.btok.on('pointerover', () => {
-                    if (this.menuInicial == true) {
-                        this.tweens.add({
-                            targets: this.btok,
-                            scale: { value: 0.45, duration: 100 }, // Aumenta para 5% em 200ms
-                            ease: 'Linear' // Utiliza uma função de easing linear para uma transição suave
-                        });
-                    }
-                });
-                
-                this.btok.on('pointerout', () => {
-                    if (this.menuInicial == true) {
-                        this.tweens.add({
-                            targets: this.btok,
-                            scale: { value: 0.4, duration: 200 }, // Retorna ao tamanho original em 200ms
-                            ease: 'Linear'
-                        });
-                    }
-                });
-
+                this.loginErrorMsg2 = this.add.text(1200, 0,"Está registado como professor!",{ fontFamily: 'font1',fontSize: 25,color: '#ff0000',align: 'center'});
+                this.loginErrorMsg2.visible = false;
             }
         });
+        
         
         this.btlogin.on('pointerover', () => {
             if (this.menuInicial == true) {
@@ -1250,6 +1343,42 @@ class GameScene extends Phaser.Scene {
             }
         });
         
+        this.btlogin.on('pointerout', () => {
+            if (this.menuInicial == true) {
+                this.tweens.add({
+                    targets: this.btlogin,
+                    scale: { value: 0.5, duration: 200 }, // Retorna ao tamanho original em 200ms
+                    ease: 'Linear'
+                });
+            }
+        });
+        
+
+    }
+
+    update() {} // Função de atualização do jogo, chamada automaticamente pelo Phaser em cada frame
+
+} 
+
+// Configuração do jogo
+const config = {
+    type: Phaser.AUTO, // Tipo de renderização WebGL
+    width: sizes.width, // Largura do jogo
+    height: sizes.height, // Altura do jogo
+    scene: [GameScene], // Array de cenas do jogo, neste caso, apenas uma cena (GameScene)
+    scale: {
+        mode: Phaser.Scale.FIT, // Ajusta o jogo para caber na janela do navegador
+        autoCenter: Phaser.Scale.CENTER_BOTH // Centraliza o jogo na janela do navegador
+    },
+    backgroundColor: "#ffffff",
+    parent: 'divId',
+    fullscreenTarget: 'divId',
+    scene: [GameScene],
+}
+
+// Criação do objeto de jogo com base na configuração definida
+const game = new Phaser.Game(config);
+var infoUser = new loginInfo();
         this.btlogin.on('pointerout', () => {
             if (this.menuInicial == true) {
                 this.tweens.add({
